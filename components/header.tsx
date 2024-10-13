@@ -20,9 +20,9 @@ export function Header() {
           <Link href="/events/create" className="text-foreground hover:text-primary">
             Create Event
           </Link>
-          <Link href="/events" className="text-foreground hover:text-primary">
+          {/* <Link href="/events" className="text-foreground hover:text-primary">
             Browse Events
-          </Link>
+          </Link> */}
           <Link href="/dashboard" className="text-foreground hover:text-primary">
             Dashboard
           </Link>

@@ -1,5 +1,5 @@
 export const EventPlatform = {
-  address: "0xe2bB254626A8c7Ed4Ef837B023815A2e8773BdC9",
+  address: "0xF64cD3fE83D761fF680Ba72fA1Bd69a45Edef477",
   abi: [
     {
       "anonymous": false,
@@ -271,6 +271,30 @@ export const EventPlatform = {
         }
       ],
       "name": "getTicketsOwned",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_account",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_eventId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getTicketsOwnedByAccount",
       "outputs": [
         {
           "internalType": "uint256",

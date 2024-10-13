@@ -56,6 +56,10 @@ contract DecentralizedEventPlatform {
         return ticketsOwned[msg.sender][_eventId];
     }
 
+    function getTicketsOwnedByAccount(address _account, uint256 _eventId) public view returns (uint256) {
+        return ticketsOwned[_account][_eventId];
+    }
+
     function getEventCount() public view returns (uint256) {
         return eventCount;
     }

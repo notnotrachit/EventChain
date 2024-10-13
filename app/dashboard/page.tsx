@@ -7,6 +7,7 @@ import { EventPlatform } from '@/lib/contracts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Header } from '@/components/header';
+import { parse } from 'path';
 
 export default function Dashboard() {
   const { provider, address } = useWeb3();
@@ -52,13 +53,19 @@ export default function Dashboard() {
       const contract = new ethers.Contract(EventPlatform.address, EventPlatform.abi, provider);
       const eventCount = await contract.getEventCount();
       console.log("eventCount", eventCount);
-      const tickets = [];
+      const etickets = [];
       for (let i = 0; i < eventCount; i++) {
         const event = await contract.events(i);
-        const tickets = await contract.getTicketsOwned(i);
-        console.log("tickets", tickets);
+        const tickets = await contract.getTicketsOwnedByAccount(address, i);
+        if (parseInt(tickets._hex) > 0) {
+          etickets.push({
+            event: event,
+            id: i,
+            count: parseInt(tickets._hex),
+          });
+        }
 
-        // setUserTickets(tickets);
+        setUserTickets(etickets);
       }
     } catch (error) {
       console.error("Failed to fetch user tickets:", error);
@@ -70,6 +77,7 @@ export default function Dashboard() {
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
 
+      {userEvents.length != 0 && (
         <div className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Your Events</h2>
           <button onClick={fetchUserEvents}>Refresh</button>
@@ -85,12 +93,13 @@ export default function Dashboard() {
                     Tickets Sold: {parseInt(event.ticketsSold._hex)}/
                     {parseInt(event.maxTickets._hex)}
                   </p>
-                  <Button className="mt-2">Manage Event</Button>
+                  {/* <Button className="mt-2">Manage Event</Button> */}
                 </CardContent>
               </Card>
             ))}
           </div>
         </div>
+      )}
 
         <div>
           <h2 className="text-2xl font-semibold mb-4">Your Tickets</h2>
@@ -105,8 +114,8 @@ export default function Dashboard() {
                   <p>
                     Date: {new Date(ticket.event.date * 1000).toLocaleString()}
                   </p>
-                  <p>Ticket ID: {ticket.id.toString()}</p>
-                  <Button className="mt-2">View Ticket</Button>
+                  <p>Number of Tickers: {ticket.count.toString()}</p>
+                  {/* <Button className="mt-2">View QR</Button> */}
                 </CardContent>
               </Card>
             ))}
