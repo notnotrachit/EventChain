@@ -11,7 +11,18 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 export default function EventDetails() {
   const { id } = useParams();
   const { provider, address } = useWeb3();
-  const [event, setEvent] = useState(null);
+  interface Event {
+    name: string;
+    date: number;
+    price: ethers.BigNumber;
+    ticketSupply: number;
+    ticketsSold: number;
+    organizer: string;
+    isTokenGated: boolean;
+    gateToken: string;
+  }
+
+  const [event, setEvent] = useState<Event | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -22,6 +33,7 @@ export default function EventDetails() {
 
   const fetchEventDetails = async () => {
     try {
+      if (!provider || !id) return;
       const contract = new ethers.Contract(EventPlatform.address, EventPlatform.abi, provider);
       const eventData = await contract.getEvent(id);
       setEvent(eventData);
@@ -41,6 +53,10 @@ export default function EventDetails() {
     try {
       const signer = provider.getSigner();
       const contract = new ethers.Contract(EventPlatform.address, EventPlatform.abi, signer);
+      if (!event) {
+        alert('Event details are not available.');
+        return;
+      }
       const tx = await contract.purchaseTicket(id, { value: event.price });
       await tx.wait();
       alert('Ticket purchased successfully!');

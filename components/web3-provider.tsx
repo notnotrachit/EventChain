@@ -1,34 +1,48 @@
-"use client"
+"use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { ethers } from 'ethers';
+import React, { createContext, useContext, useState, useEffect, ReactNode} from 'react';
+import { ethers, providers } from "ethers";
 import Web3Modal from 'web3modal';
 
-const Web3Context = createContext(null);
+interface Web3ContextType {
+  provider: providers.Web3Provider | null;
+  address: string | null;
+  connectWallet: () => Promise<void>;
+  disconnectWallet: () => void;
+}
 
-export const useWeb3 = () => useContext(Web3Context);
+const Web3Context = createContext<Web3ContextType | null>(null);
 
-export const Web3Provider = ({ children }) => {
-  const [web3Modal, setWeb3Modal] = useState(null);
-  const [provider, setProvider] = useState(null);
-  const [address, setAddress] = useState(null);
+export const useWeb3 = () => {
+  const context = useContext(Web3Context);
+  if (!context) {
+    throw new Error("useWeb3 must be used within a Web3Provider");
+  }
+  return context;
+};
+
+export const Web3Provider = ({ children }: { children: ReactNode }) => {
+  const [web3Modal, setWeb3Modal] = useState<Web3Modal | null>(null);
+  const [provider, setProvider] = useState<providers.Web3Provider | null>(null);
+  const [address, setAddress] = useState<string | null>(null);
 
   useEffect(() => {
-    const web3Modal = new Web3Modal({
+    const web3ModalInstance = new Web3Modal({
       network: "base",
       cacheProvider: true,
     });
-    setWeb3Modal(web3Modal);
+    setWeb3Modal(web3ModalInstance);
   }, []);
 
   const connectWallet = async () => {
     try {
+      if (!web3Modal) return;
       const instance = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(instance);
-      const signer = provider.getSigner();
-      const address = await signer.getAddress();
-      setProvider(provider);
-      setAddress(address);
+      const providerInstance = new ethers.providers.Web3Provider(instance);
+      const signer = providerInstance.getSigner();
+      const userAddress = await signer.getAddress();
+      setProvider(providerInstance);
+      setAddress(userAddress);
     } catch (error) {
       console.error("Failed to connect wallet:", error);
     }

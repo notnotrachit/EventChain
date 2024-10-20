@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 import { ethers } from "ethers";
 import { useWeb3 } from "./web3-provider";
 import {
@@ -15,10 +15,11 @@ import { BorderBeam } from "./ui/border-beam";
 import ShineBorder from "./ui/shine-border";
 import { BackgroundGradient } from "./ui/background-gradient";
 
-export const fetchEvents = async (provider, setLoading, setEvents) => {
+export const fetchEvents = async (provider: ethers.Signer | ethers.providers.Provider | null | undefined, setLoading: React.Dispatch<SetStateAction<boolean>>, setEvents: any) => {
   setLoading(true);
   console.log("Fetching events");
   try {
+    if (provider) {
     const contract = new ethers.Contract(
       EventPlatform.address,
       EventPlatform.abi,
@@ -37,6 +38,7 @@ export const fetchEvents = async (provider, setLoading, setEvents) => {
     }
     console.log("Fetched events:", fetchedEvents);
     setEvents(fetchedEvents);
+  }
   } catch (error) {
     console.error("Failed to fetch events:", error);
   } finally {
@@ -46,13 +48,13 @@ export const fetchEvents = async (provider, setLoading, setEvents) => {
 
 export function EventList() {
   const { provider } = useWeb3();
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<{ id: number; name: string; description: string; date: string; ticketPrice: string; maxTickets: number; ticketsSold: number; }[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const buyTickets = async (eventId, quantity) => {
+  const buyTickets = async (eventId: any, quantity: number) => {
     console.log("Buying tickets", eventId, quantity);
     try {
-      const signer = provider.getSigner();
+      const signer = provider?.getSigner();
       const contract = new ethers.Contract(
         EventPlatform.address,
         EventPlatform.abi,
@@ -91,7 +93,7 @@ export function EventList() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {events.map((event) => (
-            <BackgroundGradient className="rounded-2xl max-w-sm sm:p-1 bg-white dark:bg-zinc-900">
+            <BackgroundGradient className="rounded-2xl max-w-sm sm:p-1 bg-white dark:bg-zinc-900" key={event.id}>
               <Card key={event.id} className="flex flex-col rounded-2xl">
                 <CardHeader>
                   <CardTitle>{event.name}</CardTitle>

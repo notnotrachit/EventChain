@@ -11,8 +11,8 @@ import { parse } from "path";
 
 export default function Dashboard() {
   const { provider, address } = useWeb3();
-  const [userEvents, setUserEvents] = useState([]);
-  const [userTickets, setUserTickets] = useState([]);
+  const [userEvents, setUserEvents] = useState<any[]>([]);
+  const [userTickets, setUserTickets] = useState<{ event: any; id: number; count: number }[]>([]);
 
   useEffect(() => {
     if (provider && address) {
@@ -26,24 +26,26 @@ export default function Dashboard() {
   const fetchUserEvents = async () => {
     console.log("fetching user events");
     try {
-      const contract = new ethers.Contract(
-        EventPlatform.address,
-        EventPlatform.abi,
-        provider
-      );
-      const eventCount = await contract.getEventCount();
-      // console.log("eventCount", eventCount);
-      const events = [];
+      if (provider){
+        const contract = new ethers.Contract(
+          EventPlatform.address,
+          EventPlatform.abi,
+          provider
+        );
+        const eventCount = await contract.getEventCount();
+        // console.log("eventCount", eventCount);
+        const events = [];
 
-      for (let i = 0; i < eventCount; i++) {
-        const event = await contract.events(i);
-        console.log(event);
-        if (event[0].toLowerCase() === address.toLowerCase()) {
-          events.push(event);
+        for (let i = 0; i < eventCount; i++) {
+          const event = await contract.events(i);
+          console.log(event);
+          if (address && event[0].toLowerCase() === address.toLowerCase()) {
+            events.push(event);
+          }
         }
-      }
 
-      setUserEvents(events);
+        setUserEvents(events);
+      }
     } catch (error) {
       console.error("Failed to fetch user events:", error);
     }
@@ -52,6 +54,7 @@ export default function Dashboard() {
   const fetchUserTickets = async () => {
     console.log("fetching user tickets");
     try {
+      if (provider){
       const contract = new ethers.Contract(
         EventPlatform.address,
         EventPlatform.abi,
@@ -71,8 +74,10 @@ export default function Dashboard() {
           });
         }
 
+        
         setUserTickets(etickets);
       }
+    }
     } catch (error) {
       console.error("Failed to fetch user tickets:", error);
     }
