@@ -116,7 +116,7 @@ export default function CreateEvent() {
       <div className="  flex flex-col md:flex-row items-center justify-center gap-10 w-full">
         <div className=" w-1/2 ">
           <h1 className="text-4xl md:text-4xl lg:text-6xl font-semibold max-w-7xl mx-auto text-center mt-6 relative z-20 py-6 bg-clip-text text-transparent bg-gradient-to-b from-neutral-800 via-neutral-700 to-neutral-700 dark:from-neutral-800 dark:via-neutral-600 dark:to-neutral-600">
-            Meet, Connect & Volenteer on the
+            Meet, Connect & Volunteer on the
             <Cover>Fastest Blockchain</Cover>{" "}
             <div className="bg-clip-text text-transparent bg-gradient-to-b from-neutral-800 via-neutral-700 to-neutral-700 dark:from-neutral-600 dark:via-neutral-400 dark:to-neutral-400">
               with EventChain{" "}

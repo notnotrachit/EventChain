@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useWeb3 } from "./web3-provider";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./mode-toggle";
+import Image from "next/image";
 
 export function Header() {
   const { address, connectWallet, disconnectWallet } = useWeb3();
@@ -13,7 +14,16 @@ export function Header() {
   return (
     <header className=" rounded-xl bg-gray-700 bg-opacity-60 backdrop-blur-md  shadow-md">
       <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <Link href="/" className="text-3xl font-bold">
+        <Link
+          href="/"
+          className="text-3xl font-bold flex gap-2 justify-center items-center"
+        >
+          <Image
+            src="https://raw.githubusercontent.com/yash-raj10/GatherDAO/refs/heads/main/public/EventChain.png?token=GHSAT0AAAAAACY4HLYHDXJYP3RIIU62ZSY4ZYVUQIA"
+            alt="EventChain"
+            width={50}
+            height={50}
+          />
           EventChain
         </Link>
         <div className="hidden md:flex space-x-4 items-center">

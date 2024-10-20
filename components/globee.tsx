@@ -415,7 +415,7 @@ export function Globee() {
           className=" div"
         >
           <h2 className="text-center text-xl md:text-4xl font-bold text-black dark:text-white">
-            Volunteer at NGOs and Make an Impact!
+            Uniting the Globe through Decentralized Meetups
           </h2>
         </motion.div>
         {/* <div className="absolute w-full bottom-0 inset-x-0 h-40 bg-gradient-to-b pointer-events-none select-none from-transparent dark:to-black to-white z-40" /> */}
