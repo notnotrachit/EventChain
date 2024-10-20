@@ -12,7 +12,9 @@ import { parse } from "path";
 export default function Dashboard() {
   const { provider, address } = useWeb3();
   const [userEvents, setUserEvents] = useState<any[]>([]);
-  const [userTickets, setUserTickets] = useState<{ event: any; id: number; count: number }[]>([]);
+  const [userTickets, setUserTickets] = useState<
+    { event: any; id: number; count: number }[]
+  >([]);
 
   useEffect(() => {
     if (provider && address) {
@@ -26,7 +28,7 @@ export default function Dashboard() {
   const fetchUserEvents = async () => {
     console.log("fetching user events");
     try {
-      if (provider){
+      if (provider) {
         const contract = new ethers.Contract(
           EventPlatform.address,
           EventPlatform.abi,
@@ -54,30 +56,29 @@ export default function Dashboard() {
   const fetchUserTickets = async () => {
     console.log("fetching user tickets");
     try {
-      if (provider){
-      const contract = new ethers.Contract(
-        EventPlatform.address,
-        EventPlatform.abi,
-        provider
-      );
-      const eventCount = await contract.getEventCount();
-      console.log("eventCount", eventCount);
-      const etickets = [];
-      for (let i = 0; i < eventCount; i++) {
-        const event = await contract.events(i);
-        const tickets = await contract.getTicketsOwnedByAccount(address, i);
-        if (parseInt(tickets._hex) > 0) {
-          etickets.push({
-            event: event,
-            id: i,
-            count: parseInt(tickets._hex),
-          });
-        }
+      if (provider) {
+        const contract = new ethers.Contract(
+          EventPlatform.address,
+          EventPlatform.abi,
+          provider
+        );
+        const eventCount = await contract.getEventCount();
+        console.log("eventCount", eventCount);
+        const etickets = [];
+        for (let i = 0; i < eventCount; i++) {
+          const event = await contract.events(i);
+          const tickets = await contract.getTicketsOwnedByAccount(address, i);
+          if (parseInt(tickets._hex) > 0) {
+            etickets.push({
+              event: event,
+              id: i,
+              count: parseInt(tickets._hex),
+            });
+          }
 
-        
-        setUserTickets(etickets);
+          setUserTickets(etickets);
+        }
       }
-    }
     } catch (error) {
       console.error("Failed to fetch user tickets:", error);
     }
@@ -94,14 +95,16 @@ export default function Dashboard() {
 
         {userEvents.length != 0 && (
           <div className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4  ">Your Events</h2>
-            <button
-              className="border-2 p-1 px-2 rounded-lg bg-gray-500 bg-opacity-70"
-              onClick={fetchUserEvents}
-            >
-              Refresh
-            </button>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="flex gap-6">
+              <h2 className="text-2xl font-semibold   ">Your Events</h2>
+              <button
+                className="border-2 p-1 px-2 rounded-lg bg-gray-500 bg-opacity-70"
+                onClick={fetchUserEvents}
+              >
+                Refresh
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-3">
               {userEvents.map((event) => (
                 <Card key="123">
                   <CardHeader>
@@ -121,15 +124,17 @@ export default function Dashboard() {
           </div>
         )}
 
-        <div>
-          <h2 className="text-2xl font-semibold mb-4 ">Your Tickets</h2>
-          <button
-            className="border-2 p-1 px-2 rounded-lg bg-gray-500 bg-opacity-70"
-            onClick={fetchUserTickets}
-          >
-            Refresh
-          </button>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mb-6">
+          <div className="flex gap-6">
+            <h2 className="text-2xl font-semibold  ">Your Tickets</h2>
+            <button
+              className="border-2 p-1 px-2 rounded-lg bg-gray-500 bg-opacity-70"
+              onClick={fetchUserTickets}
+            >
+              Refresh
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6  pt-3">
             {userTickets.map((ticket) => (
               <Card key={ticket.id}>
                 <CardHeader>

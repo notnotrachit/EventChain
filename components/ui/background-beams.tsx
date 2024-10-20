@@ -79,7 +79,7 @@ export const BackgroundBeams = React.memo(
             strokeWidth="0.5"
           ></path>
 
-          {paths.map((path, index) => (
+          {/* {paths.map((path, index) => (
             <motion.path
               key={`path-` + index}
               d={path}
@@ -87,9 +87,9 @@ export const BackgroundBeams = React.memo(
               strokeOpacity="0.4"
               strokeWidth="0.5"
             ></motion.path>
-          ))}
+          ))} */}
           <defs>
-            {paths.map((path, index) => (
+            {/* {paths.map((path, index) => (
               <motion.linearGradient
                 id={`linearGradient-${index}`}
                 key={`gradient-${index}`}
@@ -117,7 +117,7 @@ export const BackgroundBeams = React.memo(
                 <stop offset="32.5%" stopColor="#6344F5"></stop>
                 <stop offset="100%" stopColor="#AE48FF" stopOpacity="0"></stop>
               </motion.linearGradient>
-            ))}
+            ))} */}
 
             <radialGradient
               id="paint0_radial_242_278"

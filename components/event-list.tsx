@@ -15,30 +15,34 @@ import { BorderBeam } from "./ui/border-beam";
 import ShineBorder from "./ui/shine-border";
 import { BackgroundGradient } from "./ui/background-gradient";
 
-export const fetchEvents = async (provider: ethers.Signer | ethers.providers.Provider | null | undefined, setLoading: React.Dispatch<SetStateAction<boolean>>, setEvents: any) => {
+export const fetchEvents = async (
+  provider: ethers.Signer | ethers.providers.Provider | null | undefined,
+  setLoading: React.Dispatch<SetStateAction<boolean>>,
+  setEvents: any
+) => {
   setLoading(true);
   console.log("Fetching events");
   try {
     if (provider) {
-    const contract = new ethers.Contract(
-      EventPlatform.address,
-      EventPlatform.abi,
-      provider
-    );
-    const eventCount = await contract.getEventCount();
-    const fetchedEvents = [];
-    console.log("Event count:", eventCount);
+      const contract = new ethers.Contract(
+        EventPlatform.address,
+        EventPlatform.abi,
+        provider
+      );
+      const eventCount = await contract.getEventCount();
+      const fetchedEvents = [];
+      console.log("Event count:", eventCount);
 
-    for (let i = 0; i < eventCount; i++) {
-      const event = await contract.events(i);
-      fetchedEvents.push({
-        id: i,
-        ...event,
-      });
+      for (let i = 0; i < eventCount; i++) {
+        const event = await contract.events(i);
+        fetchedEvents.push({
+          id: i,
+          ...event,
+        });
+      }
+      console.log("Fetched events:", fetchedEvents);
+      setEvents(fetchedEvents);
     }
-    console.log("Fetched events:", fetchedEvents);
-    setEvents(fetchedEvents);
-  }
   } catch (error) {
     console.error("Failed to fetch events:", error);
   } finally {
@@ -48,7 +52,17 @@ export const fetchEvents = async (provider: ethers.Signer | ethers.providers.Pro
 
 export function EventList() {
   const { provider } = useWeb3();
-  const [events, setEvents] = useState<{ id: number; name: string; description: string; date: string; ticketPrice: string; maxTickets: number; ticketsSold: number; }[]>([]);
+  const [events, setEvents] = useState<
+    {
+      id: number;
+      name: string;
+      description: string;
+      date: string;
+      ticketPrice: string;
+      maxTickets: number;
+      ticketsSold: number;
+    }[]
+  >([]);
   const [loading, setLoading] = useState(false);
 
   const buyTickets = async (eventId: any, quantity: number) => {
@@ -93,7 +107,10 @@ export function EventList() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {events.map((event) => (
-            <BackgroundGradient className="rounded-2xl max-w-sm sm:p-1 bg-white dark:bg-zinc-900" key={event.id}>
+            <BackgroundGradient
+              className="rounded-2xl  sm:p-1 bg-white dark:bg-zinc-900"
+              key={event.id}
+            >
               <Card key={event.id} className="flex flex-col rounded-2xl">
                 <CardHeader>
                   <CardTitle>{event.name}</CardTitle>
